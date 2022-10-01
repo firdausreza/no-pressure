@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorepinRequest;
 use App\Http\Requests\UpdatepinRequest;
 use App\Models\Pin;
+use Illuminate\Support\Facades\Redirect;
 
 class PinController extends Controller
 {
@@ -32,11 +33,19 @@ class PinController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StorepinRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StorepinRequest $request)
     {
         //
+        foreach($request->all() as $key => $value) {
+            $pin = new Pin();
+            $pin->user_id = $value['user_id'];
+            $pin->title = $value['title'];
+            $pin->description = $value['description'];
+            $pin->save();
+        }
+        return Redirect::to('/');
     }
 
     /**
@@ -77,10 +86,13 @@ class PinController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Pin  $Pin
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Pin $Pin)
+    public function destroy(mixed $id)
     {
         //
+        $pin = Pin::query()->find($id);
+        $pin->delete();
+        return Redirect::to('/');
     }
 }

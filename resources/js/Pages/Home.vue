@@ -14,7 +14,13 @@
             <h1 class="text-3xl">Pins</h1>
 
             <div v-for="pin in pins" :key="pin.id" class="bg-white px-5 py-2 rounded-md">
-                <h1 class="pb-5">by: <span class="font-semibold text-indigo-600">{{ pin.user_name }}</span></h1>
+                <!--  I modify the component a little to add delete button  -->
+                <div class="w-full flex items-center justify-between mb-5 mt-1">
+                    <h1>by: <span class="font-semibold text-indigo-600">{{ pin.user_name }}</span></h1>
+                    <button @click="deletePin(pin)" class="px-3 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 w-max cursor-pointer ml-2">
+                        Delete
+                    </button>
+                </div>
                 <h1 class="text-xl font-bold">{{ pin.title }}</h1>
                 <p>{{ pin.description }}</p>
             </div>
@@ -24,6 +30,7 @@
 
 <script setup>
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Inertia } from "@inertiajs/inertia";
 
 defineProps({
     canLogin: Boolean,
@@ -35,4 +42,9 @@ defineProps({
         default: () => {}
     }
 });
+
+// Delete Pin
+const deletePin = (pin) => {
+    Inertia.delete(`/pins/destroy/${pin.id}`)
+}
 </script>
